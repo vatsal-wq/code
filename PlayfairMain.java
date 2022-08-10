@@ -1,4 +1,4 @@
-import java.io.*;
+
 import java.util.*;
 
 class Playfair{
@@ -148,6 +148,54 @@ class Playfair{
         return encText;
     }
 
+    public String decryptMessage(String Code)
+    {
+        String Original = new String();
+        String src_arr[] = formPairs(Code);
+        char one;
+        char two;
+        int part1[] = new int[2];
+        int part2[] = new int[2];
+        for (int i = 0; i < src_arr.length; i++)
+        {
+            one = src_arr[i].charAt(0);
+            two = src_arr[i].charAt(1);
+            part1 = charPos(one);
+            part2 = charPos(two);
+            if (part1[0] == part2[0])
+            {
+                if (part1[1] > 0)
+                    part1[1]--;
+                else
+                    part1[1] = 4;
+                if (part2[1] > 0)
+                    part2[1]--;
+                else
+                    part2[1] = 4;
+            }
+            else if (part1[1] == part2[1])
+            {
+                if (part1[0] > 0)
+                    part1[0]--;
+                else
+                    part1[0] = 4;
+                if (part2[0] > 0)
+                    part2[0]--;
+                else
+                    part2[0] = 4;
+            }
+            else
+            {
+                int temp = part1[1];
+                part1[1] = part2[1];
+                part2[1] = temp;
+            }
+            Original = Original + key_matrix[part1[0]][part1[1]]
+                    + key_matrix[part2[0]][part2[1]];
+        }
+        return Original;
+    }
+
 }
 
 public class PlayfairMain{
@@ -166,7 +214,11 @@ public class PlayfairMain{
         pfc.create_matrix();
 
         String ctext = pfc.Encrypt();
-        System.out.println(ctext);
+        System.out.println("\n\n Encrypted text is: "+ctext);
+
+        String ptext2 = pfc.decryptMessage(ctext);
+        System.out.println("\n\n Dencrypted text is: "+ptext2);
+        sc.close();
     }
 }
 
